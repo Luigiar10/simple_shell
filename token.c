@@ -6,14 +6,14 @@ char **tokenizador(char *line)
 	char **toks;
 
 	toks = malloc(sizeof(char *) * 5);
-token = strtok(line, " ");
-while (token != NULL)
-{
-   toks[counter] = strdup(token);
-   token = strtok(NULL, " ");
-   counter++;
-}
-toks[counter] = token;
+	token = strtok(line, " ");
+	while (token != NULL)
+	{
+		toks[counter] = strdup(token);
+		token = strtok(NULL, " ");
+		counter++;
+	}
+	toks[counter] = token;
 
-return (toks);
+	return (toks);
 }
