@@ -33,9 +33,7 @@
 				exit (98);
 			}
 			if(*line == '\n')
-			{
-				continue;
-			}
+			{ continue; }
 			newline = malloc(sizeof(char) * 10);
 			for (i = 0; line[i] != '\n'; i++)
 			{ newline[i] = line[i]; }
