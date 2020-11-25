@@ -12,6 +12,8 @@ char *alias_name;
 char *real_name;
 } alias;
 char *builtin(char *toks);
+char *_strdup(char *str);
+int _strlen(char *s);
 int _stdrup(char *s1, char *s2);
 char **tokenizador(char *line);
 #endif
