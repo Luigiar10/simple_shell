@@ -1,19 +1,20 @@
 #include "shell.h"
 char **tokenizador(char *line)
 {
-	char *token;
+	char *word;
 	int counter = 0;
 	char **toks;
+	char *delimiter = " ";
 
 	toks = malloc(sizeof(char *) * 5);
-	token = strtok(line, " ");
-	while (token != NULL)
+	word = strtok(line, delimiter);
+	while (word != NULL)
 	{
-		toks[counter] = strdup(token);
-		token = strtok(NULL, " ");
+		toks[counter] = strdup(word);
+		word = strtok(NULL, " ");
 		counter++;
 	}
-	toks[counter] = token;
+	toks[counter] = word;
 
 	return (toks);
 }
