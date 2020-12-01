@@ -1,58 +1,52 @@
-#include "shell.h"
+#include "Shell.h"
 
-char *builtin(char *toks)
+/**
+ * Ins_Next_Element - Inserts an element just after element in the
+ *                    linked list specified by list.If elementis NULL, the
+ *                    new element is inserted at the head of the list.The new
+ *                    element contains a pointer to Path, so the memory
+ *                    referenced by data should remain valid as long as the
+ *                    element remains in the list. It is the responsibil-ity of
+ *                    the caller to manage the storage associated with data.
+ *
+ * @element:   If elementis NULL, the new element is inserted
+ *             at the head of the list.
+ * @list:      Points to the data structure list.
+ * @Path:      Pointer that contains the data to be added to the created node.
+ * Return: Value0 if inserting the element is successful, or –1 otherwise.
+ *
+ *                                 O-Notation
+ * Complexity      O(1)
+ */
+
+int Ins_Next_Element(List *list, Element *element, char *Path)
 {
-	int counter = 0;
-	char *String;
-	int i = 0;
-	alias my_aliases[] = {
-	{"/bin/ls", "/bin/ls"},
-	{"/bin/ll", "/bin/ls -alF"},
-	{"/bin/la", "/bin/ls -A"},
-	{NULL, NULL},
-	};
+	Element *New_Element = NULL;
 
-while (my_aliases[counter].alias_name != NULL)
+	New_Element = (Element *)malloc(sizeof(Element));
+	if (!New_Element)
+		return (-1);
+
+	New_Element->Path = Path;
+	New_Element->Length_Path = 0;
+	if (Path)
+		Length_PATH(New_Element, (New_Element->Length_Path));
+	if (!element)
 	{
-		if (_stdrup(toks, my_aliases[counter].alias_name) == 1)
-		{
-			toks = my_aliases[counter].real_name;
-			String = malloc(sizeof(char) * 100);
-			while (toks[i] != '\0')
-			{
-				String[i] = toks[i];
-				i++;
-			}
-			return(String);
-		}
-		counter++;
-	}
-
-	return(toks);
-}
-int _stdrup(char *s1, char *s2)
-{
-	int i = 0;
-	int j = 0;
-	int k = 0;
-
-	while (s1[i] != '\0')
-	{ i++; }
-
-	while(s1[j] != '\0')
-	{
-		if(s1[j] == s2[j])
-		{
-			k++;
-		}
-		j++;
-	}
-	if(k == i){
-		return(1);
+		if (!(list->Tail))
+			list->Tail = New_Element;
+		New_Element->Next  = list->Head;
+		list->Head         = New_Element;
 	}
 	else
 	{
-		return (0);
+		if (!(element->Next))
+			list->Tail = New_Element;
+		New_Element        = element->Next;
+		element->Next      = New_Element;
 	}
+
+	(list->Size_List)++;
+
 	return (0);
 }

@@ -1,22 +1,26 @@
-#include "shell.h"
+#include "Shell.h"
 
+/**
+ *  List_Destro - Destroys  the  linked  list  specified  bylist.
+ *                No  other  operationsare  permitted  after  calling
+ *                List_Destroy unless List_Init is  called  again. The
+ *                List_Destroyo peration removes all elements from a linked
+ *                list and calls the function passed as destroyto List_Init
+ *                once for each element as it is removed, provideddestroy
+ *                was not set to NULL.
+ * @list: Pointer to a function of type structure.
+ *
+ *                                 O-Notation
+ * Complexity      O(n) --> wheren is the number of elements in the
+ *                          linked list.
+ */
 
-void end_of_line(int charactersRead,char **toks, char *newline, char *line)
+void
+List_Destroy(List *list)
 {
-	int i;
-	if (charactersRead == -1)
-			{
-				i = 0;
-				while(toks[i] != '\0')
-				{
-					free(toks[i]);
-					i++;
-				}
-				free(newline);
-				free(toks);
-				free(line);
-				printf("\n");
-				exit (98);
-			}
-}
+	char *Path;
 
+	while (list->Size_List > 0)
+		if ((Rem_Nex_Element(list, NULL, &Path) == 0) && (list->Destroy != NULL))
+			list->Destroy(Path);
+}
