@@ -1,3 +1,5 @@
+# Simple Shell
+
 This a simple Shell project made for our process of learning in the Holberton School. This Shell include some of characteristics basics of one Shell UNIX. The Shell works interpreting the commands written in the standard input, that the user execute using its keyboard.
 
 Clone this repo in your terminal:
