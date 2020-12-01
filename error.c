@@ -1,64 +1,99 @@
-#include "Shell.h"
+#include "error.h"
+#include "general.h"
+#include "text.h"
 
 /**
- * _strlen -  function
- * @s: The number to be checked
+ * message_selector - Select the message that match with the error_code
  *
- * Return: returns the length of a string.
- */
-int _strlen(char *s)
+ * @info: General information about the shell
+ *
+ * Return: Error message
+ **/
+char *message_selector(general_t info)
 {
-	int contador = 0;
+	int i, n_options;
+	error_t messages[] = {
+		{_ENOENT, _CODE_ENOENT},
+		{_EACCES, _CODE_EACCES},
+		{_CMD_NOT_EXISTS, _CODE_CMD_NOT_EXISTS},
+		{_ILLEGAL_NUMBER, _CODE_ILLEGAL_NUMBER}
+	};
 
-	while (s && s[contador] != '\0')
-	{
-		contador++;
-	}
-	return (contador);
+	n_options = sizeof(messages) / sizeof(messages[0]);
+	for (i = 0; i < n_options; i++)
+		if (info.error_code == messages[i].code)
+			return (messages[i].message);
+
+	return ("");
 }
 
-int error_print(char c);
-
 /**
- * hand_error - compose the standar error message
- * @argv: double pointer with arguments from input
- * @error_counter: prompt counter
- */
-void hand_error(int error_counter, char **argv)
+ * error - Print the error
+ *
+ * @info: General information about the shell
+ **/
+void error(general_t *info)
 {
-	int multi = 1, number = 1, copy = 0;
+	char *message;
+	char *number;
+	char *aux;
+	int size_number, size_message;
 
-	write(STDERR_FILENO, "hsh", 3);
-	write(STDERR_FILENO, ": ", 2);
+	number = NULL;
+	message = message_selector(*info);
+	number = to_string(info->n_commands);
 
-	copy = error_counter;
+	size_number = _strlen(number);
+	size_message = _strlen(info->argv[0]);
 
-	while (copy >= 10)
-	{
-		copy = copy / 10;
-		multi = multi * 10;
-		number++;
-	}
-	while (number > 1)
-	{
-		if ((error_counter / multi) < 10)
-			error_print((error_counter / multi + '0'));
-		else
-			error_print((error_counter / multi) % 10 + '0');
-		number--;
-		multi = multi / 10;
-	}
-	error_print(error_counter % 10 + '0');
-	write(STDERR_FILENO, ": ", 2);
-	write(STDERR_FILENO, argv[0], _strlen(argv[0]));
-	write(STDERR_FILENO, ": not found\n", 12);
+	aux = malloc(size_message + size_number + 3);
+
+	aux = _strcpy(aux, info->argv[0]);
+	aux = _strcat(aux, ": ");
+	aux = _strcat(aux, number);
+
+	message = join_words(aux, info->command, message, ": ");
+	print_err(message);
+
+	free(message);
+	free(number);
+	free(aux);
 }
+
 /**
- *error_print - sends char to write
- *@c: char to be printed
- *Return: to print
- */
-int error_print(char c)
+ * error_extra - Print the error with extra information
+ *
+ * @info: General information about the shell
+ * @extra: Extra information
+ **/
+void error_extra(general_t *info, char *extra)
 {
-	return (write(STDERR_FILENO, &c, 1));
+	char *message, *number, *aux, *aux2;
+	int size_number, size_message, size_extra;
+
+	number = NULL;
+	message = message_selector(*info);
+	number = to_string(info->n_commands);
+
+	size_number = _strlen(number);
+	size_message = _strlen(info->argv[0]);
+	size_extra = _strlen(extra);
+
+	aux = malloc(size_message + size_number + 3);
+	aux = _strcpy(aux, info->argv[0]);
+	aux = _strcat(aux, ": ");
+	aux = _strcat(aux, number);
+
+	aux2 = malloc(_strlen(message) + size_extra + 3);
+	aux2 = _strcpy(aux2, message);
+	aux2 = _strcat(aux2, ": ");
+	aux2 = _strcat(aux2, extra);
+
+	message = join_words(aux, info->command, aux2, ": ");
+	print_err(message);
+
+	free(message);
+	free(number);
+	free(aux);
+	free(aux2);
 }

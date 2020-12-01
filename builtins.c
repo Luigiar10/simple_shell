@@ -1,52 +1,54 @@
-#include "Shell.h"
+#include "builtins.h"
 
 /**
- * Ins_Next_Element - Inserts an element just after element in the
- *                    linked list specified by list.If elementis NULL, the
- *                    new element is inserted at the head of the list.The new
- *                    element contains a pointer to Path, so the memory
- *                    referenced by data should remain valid as long as the
- *                    element remains in the list. It is the responsibil-ity of
- *                    the caller to manage the storage associated with data.
+ * builtins - Check and execute the builtins
  *
- * @element:   If elementis NULL, the new element is inserted
- *             at the head of the list.
- * @list:      Points to the data structure list.
- * @Path:      Pointer that contains the data to be added to the created node.
- * Return: Value0 if inserting the element is successful, or –1 otherwise.
+ * @info: Information about the shell
+ * @arguments: Commands and arguments
  *
- *                                 O-Notation
- * Complexity      O(1)
- */
-
-int Ins_Next_Element(List *list, Element *element, char *Path)
+ * Return: If the command passed is a builtins
+ * return _TRUE if not return _FALSE
+ **/
+int builtins(general_t *info, char **arguments)
 {
-	Element *New_Element = NULL;
+	int status;
 
-	New_Element = (Element *)malloc(sizeof(Element));
-	if (!New_Element)
-		return (-1);
+	status = check_builtin(info, arguments);
+	if (status == _FALSE)
+		return (_FALSE);
 
-	New_Element->Path = Path;
-	New_Element->Length_Path = 0;
-	if (Path)
-		Length_PATH(New_Element, (New_Element->Length_Path));
-	if (!element)
-	{
-		if (!(list->Tail))
-			list->Tail = New_Element;
-		New_Element->Next  = list->Head;
-		list->Head         = New_Element;
-	}
-	else
-	{
-		if (!(element->Next))
-			list->Tail = New_Element;
-		New_Element        = element->Next;
-		element->Next      = New_Element;
-	}
-
-	(list->Size_List)++;
-
-	return (0);
+	return (_TRUE);
 }
+
+
+/**
+ * check_builtin - Check if the actual command is a builtin_t
+ * or not
+ *
+ * @info: General information about the shell
+ * @arguments: Arguments of the command
+ *
+ * Return: If the command is an actual builtin, return _TRUE
+ * if not _FALSE
+ **/
+int check_builtin(general_t *info, char **arguments)
+{
+	int i, size;
+	builtin_t builtins[] = {
+		{"exit", bin_exit},
+		{"env", bin_env}
+	};
+
+	size = sizeof(builtins) / sizeof(builtins[0]);
+	for (i = 0; i < size; i++)
+	{
+		if (_strcmp(info->command, builtins[i].command) == 0)
+		{
+			builtins[i].func(info, arguments);
+			return (_TRUE);
+		}
+	}
+
+	return (_FALSE);
+}
+
