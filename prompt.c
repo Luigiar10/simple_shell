@@ -60,7 +60,6 @@ Execve(char *Path, char **argv)
 	if (child_pid)
 	{
 		wait(&status);
-		printf("EN la funcion analice_string");
 	}
 	else
 		return (execve(Path, argv, NULL));
